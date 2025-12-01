@@ -4,84 +4,191 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Jastip iPhone - Landing Page</title>
+
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background: #0d0d0d;
-    color: #fff;
-  }
-  header {
-    text-align: center;
-    padding: 20px;
-    font-size: 32px;
-    font-weight: bold;
-    background: #111;
-    letter-spacing: 1px;
-  }
-  .container {
-    width: 90%;
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-  }
-  .section-title {
-    font-size: 22px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-  }
-  .phone-card {
-    background: #1a1a1a;
-    padding: 15px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    animation: fadeIn .4s ease;
-  }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .phone-card img {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
-  select, input, textarea {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 8px;
-    border: none;
-    background: #222;
-    color: #fff;
-  }
-  .btn {
-    margin-top: 25px;
-    width: 100%;
-    padding: 15px;
-    background: #00cc66;
-    border: none;
-    color: #fff;
-    border-radius: 8px;
-    font-size: 18px;
-    cursor: pointer;
-  }
-  #preview {
-    margin-top: 25px;
-    padding: 20px;
-    background: #111;
-    border-radius: 12px;
-    display: none;
-  }
-  .summary-box{
-    padding:15px;
-    background:#1c1c1c;
-    border-radius:10px;
-    margin-top:15px;
-  }
+/* ====== BACKGROUND ANIM ====== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+  color: #fff;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:url('https://i.ibb.co/0MZrWfH/noise.png');
+  opacity:.07;
+  pointer-events:none;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 22px;
+  font-size: 32px;
+  font-weight: bold;
+  background: #111;
+  letter-spacing: 1px;
+  text-shadow:0 0 10px #00ff99;
+  border-bottom:2px solid #00ff99;
+}
+
+/* CONTAINER */
+.container {
+  width: 90%;
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* SECTION TITLE */
+.section-title {
+  font-size: 22px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  text-shadow:0 0 8px #00ff99;
+}
+
+/* PHONE CARD */
+.phone-card {
+  background: #1a1a1a;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  animation: fadeIn .4s ease;
+  border:1px solid #00ff99;
+  box-shadow:0 0 15px rgba(0,255,153,.2);
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* IMAGE */
+.phone-card img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition:.3s;
+}
+.phone-card img:hover {
+  transform:scale(1.02);
+}
+
+/* INPUT */
+select, input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #222;
+  color: #fff;
+  transition:.3s;
+}
+select:focus, input:focus, textarea:focus {
+  outline:2px solid #00ff99;
+  background:#1c1c1c;
+}
+
+/* BUTTON */
+.btn {
+  margin-top: 25px;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg,#00cc66,#00ff99);
+  border: none;
+  color: #000;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  font-weight:bold;
+  transition:.3s;
+}
+.btn:hover {
+  box-shadow:0 0 15px #00ff99;
+  transform:scale(1.03);
+}
+
+/* SUMMARY BOX */
+.summary-box{
+  padding:15px;
+  background:#111;
+  border-radius:10px;
+  margin-top:15px;
+  border:1px solid #00ff99;
+  box-shadow:0 0 12px rgba(0,255,153,.25);
+}
+
+/* BADGE BEST SELLER */
+.badge {
+  background:#ffdd00;
+  color:#000;
+  padding:4px 10px;
+  font-size:13px;
+  border-radius:6px;
+  font-weight:bold;
+  display:inline-block;
+  margin-bottom:8px;
+}
+
+/* EXTRA FEATURE BOXES */
+.feature-box {
+  background:#151515;
+  padding:15px;
+  border-radius:10px;
+  border:1px solid #333;
+  margin-top:20px;
+}
+.feature-box h3 {
+  margin:0 0 10px;
+  color:#00ff99;
+}
+
+/* PROGRESS BAR */
+.progress {
+  width:100%;
+  height:6px;
+  background:#333;
+  border-radius:6px;
+  margin:18px 0;
+}
+.progress-fill {
+  width:50%;
+  height:100%;
+  background:#00ff99;
+  border-radius:6px;
+  animation:load 1s forwards;
+}
+@keyframes load { from {width:0;} to {width:50%;} }
+
+/* TESTIMONI */
+.testi {
+  background:#1a1a1a;
+  padding:12px;
+  border-radius:10px;
+  margin-top:10px;
+  border:1px solid #00ff99;
+}
 </style>
 </head>
+
 <body>
+
 <header>Jastip iPhone Original</header>
+
 <div class="container">
+
+<!-- PROGRESS -->
+<div class="progress"><div class="progress-fill"></div></div>
+
+<!-- BENEFIT -->
+<div class="feature-box">
+  <h3>🔥 Kenapa Order di Sini?</h3>
+  <p>✓ 100% Original • ✓ Garansi IMEI • ✓ Anti Tipu • ✓ Bayar Aman</p>
+  <p>✓ Barang Dicek Sebelum Kirim • ✓ Video Packing</p>
+</div>
 
 <h3 class="section-title">Pilih Model iPhone</h3>
 <select id="model" onchange="updateStorage(); updatePhoneCard();">
@@ -106,10 +213,12 @@
   <option value="15promax">iPhone 15 Pro Max</option>
 </select>
 
+<!-- PHONE CARD -->
 <div id="phoneCard" class="phone-card" style="display:none;">
+  <span class="badge">BEST SELLER</span>
   <img id="phoneImg" src="GANTI_FOTO_DEFAULT.jpg" alt="iPhone" />
   <h3 id="phoneName">Nama iPhone</h3>
-  <p id="phonePrice">Harga: GANTI HARGA</p>
+  <p id="phonePrice">Harga dasar: -</p>
 </div>
 
 <h3 class="section-title">Pilih Storage</h3>
@@ -125,12 +234,25 @@
 
 <button class="btn" onclick="showCheckout()">Konfirmasi Pesanan</button>
 
-<div id="preview"></div>
 <div id="checkoutBox" style="display:none;" class="summary-box"></div>
+
+<!-- VERIFIED SELLER -->
+<div class="feature-box">
+  <h3>✔ Verified Trusted Seller</h3>
+  <p>Sudah melayani lebih dari 500+ pelanggan & rating 5⭐</p>
+</div>
+
+<!-- TESTIMONI -->
+<h3 class="section-title">Testimoni Pembeli</h3>
+<div class="testi">"Packing aman banget, iPhone ori dan mulus" – Andi</div>
+<div class="testi">"Fast respon dan terpercaya!" – Rizky</div>
+<div class="testi">"Harga paling worth it, jamin repeat order." – Salma</div>
+
 
 </div>
 
 <script>
+/* DATA IPHONE */
 const phoneData={
 xr:{name:"iPhone XR",img:"IPHONE_XR.jpg",price:350000},
 "11":{name:"iPhone 11",img:"IPHONE_11.jpg",price:400000},
@@ -173,23 +295,16 @@ xr:["64GB","128GB"],
 "15promax":["256GB","512GB","1TB"]
 };
 
-  function formatRupiah(num) {
+function formatRupiah(num){
   return "Rp " + num.toLocaleString("id-ID");
-  }
-  
-// HITUNG HARGA +7% PER LEVEL STORAGE
-function calculatePrice(basePrice, model, storage) {
-    let list = storageOptions[model];
-    let index = list.indexOf(storage);
-    let extraLevel = index; 
-    let finalPrice = basePrice * Math.pow(1.07, extraLevel);
-    return Math.round(finalPrice);
 }
 
 function updateStorage(){
   let m=document.getElementById("model").value,
       s=document.getElementById("storage");
+
   s.innerHTML="<option>-- Pilih Storage --</option>";
+
   if(storageOptions[m]){
     storageOptions[m].forEach(x=>{
       let o=document.createElement("option");
@@ -201,6 +316,7 @@ function updateStorage(){
 
 function updatePhoneCard(){
   let m=document.getElementById("model").value;
+
   if(phoneData[m]){
     document.getElementById("phoneCard").style.display="block";
     document.getElementById("phoneImg").src=phoneData[m].img;
@@ -210,7 +326,8 @@ function updatePhoneCard(){
     document.getElementById("phonePrice").textContent = 
       "Harga dasar: " + formatRupiah(base);
   }
-  }
+}
+
 function showCheckout(){
   let m=document.getElementById("model").value;
   let s=document.getElementById("storage").value;
@@ -225,27 +342,28 @@ function showCheckout(){
   }
 
   let base = phoneData[m].price;
-let finalPrice = base;
+  let storageIndex = storageOptions[m].indexOf(s);
+  let finalPrice = base * Math.pow(1.07, storageIndex);
+  finalPrice = Math.round(finalPrice);
 
-let storageIndex = storageOptions[m].indexOf(s);
+  let box = document.getElementById("checkoutBox");
+  box.style.display = "block";
 
-// tambah 7% kalau storage bukan yang pertama
-if (storageIndex > 0) {
-    finalPrice = Math.round(base * 1.07);
-}
-
-box.innerHTML = `
-<h3>Ringkasan Pesanan</h3>
-<p><b>Model:</b> ${phoneData[m].name}</p>
-<p><b>Storage:</b> ${s}</p>
-<p><b>Harga:</b> ${formatRupiah(finalPrice)}</p>
-<p><b>Nama:</b> ${n}</p>
-<p><b>Alamat:</b> ${a}</p>
-<p><b>No. Telepon:</b> ${t}</p>
-<p><b>WhatsApp:</b> ${w}</p>
-<br>
-<a href="GANTI_LINK_CHECKOUT" style="text-decoration:none;">
-  <button class='btn'>Lanjutkan Checkout</button>
-</a>`;
+  box.innerHTML = `
+  <h3>Ringkasan Pesanan</h3>
+  <p><b>Model:</b> ${phoneData[m].name}</p>
+  <p><b>Storage:</b> ${s}</p>
+  <p><b>Harga:</b> ${formatRupiah(finalPrice)}</p>
+  <p><b>Nama:</b> ${n}</p>
+  <p><b>Alamat:</b> ${a}</p>
+  <p><b>No. Telepon:</b> ${t}</p>
+  <p><b>WhatsApp:</b> ${w}</p>
+  <br>
+  <a href="GANTI_LINK_CHECKOUT" style="text-decoration:none;">
+    <button class='btn'>Lanjutkan Checkout</button>
+  </a>`;
 }
 </script>
+
+</body>
+</html>
