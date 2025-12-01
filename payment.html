@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pembayaran Pesanan</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #0d0d0d;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn 0.8s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .box {
+    background: #1a1a1a;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px #111;
+    animation: float 3s infinite ease-in-out;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-4px); }
+    100% { transform: translateY(0px); }
+  }
+
+  .payment-method {
+    padding: 12px;
+    background: #111;
+    border-radius: 10px;
+    margin: 8px 0;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid #222;
+  }
+
+  .payment-method:hover {
+    background: #222;
+  }
+
+  .payment-method.selected {
+    border: 1px solid #0aff9d;
+    background: #1f1f1f;
+  }
+
+  #qrisImage {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 12px;
+    display: none;
+  }
+
+  .pay-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #00ffa2, #00d4ff);
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: #000;
+    font-weight: bold;
+  }
+
+  .pay-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Konfirmasi Pembayaran</h2>
+
+  <!-- Ringkasan Pesanan -->
+  <div class="box">
+    <h3>Ringkasan Pesanan</h3>
+    <p><strong>Produk:</strong> <span id="produk"></span></p>
+    <p><strong>Varian:</strong> <span id="varian"></span></p>
+    <p><strong>Harga:</strong> <span id="harga"></span></p>
+  </div>
+
+  <!-- Metode Pembayaran -->
+  <div class="box">
+    <h3>Pilih Metode Pembayaran</h3>
+
+    <div class="payment-method" onclick="selectPayment(this, 'QRIS')">QRIS</div>
+    <img id="qrisImage" src="qris.jpg" alt="QRIS">
+
+    <div class="payment-method" onclick="selectPayment(this, 'BRI - 123456789')">BRI</div>
+    <div class="payment-method" onclick="selectPayment(this, 'SEABANK - 987654321')">SEA BANK</div>
+    <div class="payment-method" onclick="selectPayment(this, 'MANDIRI - 555666777')">MANDIRI</div>
+    <div class="payment-method" onclick="selectPayment(this, 'DANA - 08123456789')">DANA</div>
+    <div class="payment-method" onclick="selectPayment(this, 'OVO - 08123456789')">OVO</div>
+    <div class="payment-method" onclick="selectPayment(this, 'GOPAY - 08123456789')">GOPAY</div>
+
+  </div>
+
+  <button class="pay-btn" onclick="sendToWhatsApp()">Sudah Bayar</button>
+</div>
+
+<script>
+  // ambil data dari URL
+  const urlParams = new URLSearchParams(window.location.search);
+  document.getElementById("produk").textContent = urlParams.get("produk") || "-";
+  document.getElementById("varian").textContent = urlParams.get("varian") || "-";
+  document.getElementById("harga").textContent = urlParams.get("harga") || "-";
+
+  let selectedPayment = "";
+
+  function selectPayment(el, method) {
+    document.querySelectorAll(".payment-method").forEach(p => p.classList.remove("selected"));
+    el.classList.add("selected");
+
+    selectedPayment = method;
+
+    // Show QRIS when selected
+    if (method === "QRIS") {
+      document.getElementById("qrisImage").style.display = "block";
+    } else {
+      document.getElementById("qrisImage").style.display = "none";
+    }
+  }
+
+  function sendToWhatsApp() {
+    if (!selectedPayment) {
+      alert("Pilih metode pembayaran terlebih dahulu");
+      return;
+    }
+
+    let produk = document.getElementById("produk").textContent;
+    let varian = document.getElementById("varian").textContent;
+    let harga = document.getElementById("harga").textContent;
+
+    let pesan = 
+`Halo, saya sudah melakukan pembayaran.
+Berikut bukti & detail pesanan saya:
+
+📦 Produk: ${produk}
+🔧 Varian: ${varian}
+💰 Harga: ${harga}
+
+💳 Metode: ${selectedPayment}
+
+Mohon dicek ya.`;
+
+    let nomorWA = "6281385371544"; // ganti nomor kamu
+
+    let url = `https://wa.me/${nomorWA}?text=${encodeURIComponent(pesan)}`;
+    window.location.href = url;
+  }
+</script>
+
+</body>
+</html>
