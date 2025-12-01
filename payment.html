@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ringkasan Pesanan - Jastip iPhone</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0b0b0c;
@@ -15,7 +15,7 @@
 *{box-sizing:border-box;}
 body{
   margin:0;
-  font-family: 'Inter', sans-serif;
+  font-family:'Inter', sans-serif;
   background: linear-gradient(160deg,#060607,var(--bg));
   color: var(--text);
   min-height:100vh;
@@ -25,23 +25,23 @@ body{
   padding:20px;
 }
 .card{
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), var(--card));
-  padding:20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), var(--card));
+  padding:24px;
   border-radius:16px;
   max-width:500px;
   width:100%;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-  backdrop-filter: blur(8px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
   border:1px solid rgba(255,255,255,0.08);
   transition: transform .25s ease;
 }
 .card:hover{transform: translateY(-4px);}
 h2{
   margin-top:0;
-  margin-bottom:12px;
+  margin-bottom:16px;
   color: var(--accent);
   text-align:center;
-  font-size:22px;
+  font-size:24px;
 }
 img{
   width:100%;
@@ -93,12 +93,46 @@ p{margin:6px 0; font-size:15px;}
   mask-size: cover;
   margin-left:8px;
 }
+
+/* Modal popup */
+#paymentModal{
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+#paymentModal .modalContent{
+  background:#111;
+  padding:20px;
+  border-radius:16px;
+  max-width:400px;
+  width:90%;
+  position:relative;
+  text-align:center;
+}
+#closeModal{
+  position:absolute;
+  top:10px; right:14px;
+  cursor:pointer;
+  font-size:24px;
+  color:#fff;
+}
+#paymentModal img{
+  width:200px;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+#paymentModal p{
+  color:#fff;
+  font-size:15px;
+}
 .payment-methods{margin-top:16px;}
 .payment-methods p{margin-bottom:6px;}
 .payment-methods button{margin-bottom:6px;}
-#paymentInfo{margin-top:12px; display:none;}
-#paymentInfo img{width:200px; border-radius:12px; margin-bottom:8px;}
-#paymentInfo p{color:#fff; font-size:14px;}
 </style>
 </head>
 <body>
@@ -128,17 +162,20 @@ p{margin:6px 0; font-size:15px;}
     <button class="glass-btn primary" onclick="selectPayment('GOPAY')">GOPAY</button>
   </div>
 
-  <!-- QR / Rekening -->
-  <div id="paymentInfo">
-    <img id="qrisImg" src="" alt="QRIS">
-    <p id="rekeningText"></p>
-  </div>
-
   <!-- Tombol WA -->
   <a id="waButton" href="#" target="_blank" class="glass-btn wa">Konfirmasi via WhatsApp (kirim bukti pembayaran)</a>
 
   <!-- Tombol Sudah Dibayar -->
   <button id="paidButton" class="glass-btn primary">Sudah Dibayar</button>
+</div>
+
+<!-- Modal -->
+<div id="paymentModal">
+  <div class="modalContent">
+    <span id="closeModal">&times;</span>
+    <img id="modalImg" src="" alt="QRIS / Rek">
+    <p id="modalText"></p>
+  </div>
 </div>
 
 <script>
@@ -165,55 +202,52 @@ if(data){
   updateWA();
 
   function selectPayment(method){
-    selectedPayment = method;
     data.payment = method;
     localStorage.setItem('orderData', JSON.stringify(data));
     updateWA();
 
-    const paymentInfoDiv = document.getElementById('paymentInfo');
-    const qrisImg = document.getElementById('qrisImg');
-    const rekeningText = document.getElementById('rekeningText');
-
-    paymentInfoDiv.style.display = 'block';
+    const modal = document.getElementById('paymentModal');
+    const modalImg = document.getElementById('modalImg');
+    const modalText = document.getElementById('modalText');
 
     switch(method){
       case 'QRIS':
-        qrisImg.src = 'qris.png'; 
-        rekeningText.textContent = 'Scan QRIS untuk pembayaran';
+        modalImg.src = 'qris.png';
+        modalText.textContent = 'Scan QRIS untuk pembayaran';
         break;
       case 'BRI':
-        qrisImg.src = ''; 
-        rekeningText.textContent = 'No. Rekening BRI: 1234567890 a.n. Nama Anda';
+        modalImg.src = '';
+        modalText.textContent = 'No. Rekening BRI: 1234567890 a.n. Nama Anda';
         break;
       case 'MANDIRI':
-        qrisImg.src = ''; 
-        rekeningText.textContent = 'No. Rekening Mandiri: 0987654321 a.n. Nama Anda';
+        modalImg.src = '';
+        modalText.textContent = 'No. Rekening Mandiri: 0987654321 a.n. Nama Anda';
         break;
       case 'SEABANK':
-        qrisImg.src = ''; 
-        rekeningText.textContent = 'No. Rekening SEABANK: 1122334455 a.n. Nama Anda';
+        modalImg.src = '';
+        modalText.textContent = 'No. Rekening SEABANK: 1122334455 a.n. Nama Anda';
         break;
       case 'DANA':
-        qrisImg.src = '';
-        rekeningText.textContent = 'Nomor DANA: 081234567890';
+        modalImg.src = '';
+        modalText.textContent = 'Nomor DANA: 081234567890';
         break;
       case 'OVO':
-        qrisImg.src = '';
-        rekeningText.textContent = 'Nomor OVO: 081234567890';
+        modalImg.src = '';
+        modalText.textContent = 'Nomor OVO: 081234567890';
         break;
       case 'GOPAY':
-        qrisImg.src = '';
-        rekeningText.textContent = 'Nomor GOPAY: 081234567890';
+        modalImg.src = '';
+        modalText.textContent = 'Nomor GOPAY: 081234567890';
         break;
-      default:
-        qrisImg.src = '';
-        rekeningText.textContent = '';
     }
 
-    alert('Metode pembayaran dipilih: ' + method);
+    modal.style.display = 'flex';
   }
-
   window.selectPayment = selectPayment;
+
+  document.getElementById('closeModal').onclick = function(){
+    document.getElementById('paymentModal').style.display = 'none';
+  }
 
   const paidBtn = document.getElementById('paidButton');
   paidBtn.addEventListener('click', ()=>{
@@ -228,6 +262,5 @@ if(data){
   document.getElementById('summaryCard').innerHTML = '<p>Tidak ada data pesanan. Silakan kembali ke halaman pemesanan.</p>';
 }
 </script>
-
 </body>
-  </html>
+</html>
