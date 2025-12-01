@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Jastip iPhone - Landing Page</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #0d0d0d;
+    color: #fff;
+  }
+  header {
+    text-align: center;
+    padding: 20px;
+    font-size: 32px;
+    font-weight: bold;
+    background: #111;
+    letter-spacing: 1px;
+  }
+  .container {
+    width: 90%;
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+  }
+  .section-title {
+    font-size: 22px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  .phone-card {
+    background: #1a1a1a;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    animation: fadeIn .4s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .phone-card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  select, input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #222;
+    color: #fff;
+  }
+  .btn {
+    margin-top: 25px;
+    width: 100%;
+    padding: 15px;
+    background: #00cc66;
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  #preview {
+    margin-top: 25px;
+    padding: 20px;
+    background: #111;
+    border-radius: 12px;
+    display: none;
+  }
+  .summary-box{
+    padding:15px;
+    background:#1c1c1c;
+    border-radius:10px;
+    margin-top:15px;
+  }
+</style>
+</head>
+<body>
+<header>Jastip iPhone Original</header>
+<div class="container">
+
+<h3 class="section-title">Pilih Model iPhone</h3>
+<select id="model" onchange="updateStorage(); updatePhoneCard();">
+  <option value="">-- Pilih iPhone --</option>
+  <option value="xr">iPhone XR</option>
+  <option value="11">iPhone 11</option>
+  <option value="11pro">iPhone 11 Pro</option>
+  <option value="11promax">iPhone 11 Pro Max</option>
+  <option value="12">iPhone 12</option>
+  <option value="12pro">iPhone 12 Pro</option>
+  <option value="12promax">iPhone 12 Pro Max</option>
+  <option value="13">iPhone 13</option>
+  <option value="13pro">iPhone 13 Pro</option>
+  <option value="13promax">iPhone 13 Pro Max</option>
+  <option value="14">iPhone 14</option>
+  <option value="14plus">iPhone 14 Plus</option>
+  <option value="14pro">iPhone 14 Pro</option>
+  <option value="14promax">iPhone 14 Pro Max</option>
+  <option value="15">iPhone 15</option>
+  <option value="15plus">iPhone 15 Plus</option>
+  <option value="15pro">iPhone 15 Pro</option>
+  <option value="15promax">iPhone 15 Pro Max</option>
+</select>
+
+<div id="phoneCard" class="phone-card" style="display:none;">
+  <img id="phoneImg" src="GANTI_FOTO_DEFAULT.jpg" alt="iPhone" />
+  <h3 id="phoneName">Nama iPhone</h3>
+  <p id="phonePrice">Harga: GANTI HARGA</p>
+</div>
+
+<h3 class="section-title">Pilih Storage</h3>
+<select id="storage">
+  <option value="">-- Pilih Storage --</option>
+</select>
+
+<h3 class="section-title">Data Diri</h3>
+<input type="text" id="nama" placeholder="Nama lengkap" />
+<textarea id="alamat" placeholder="Alamat lengkap"></textarea>
+<input type="text" id="telepon" placeholder="Nomor telepon" />
+<input type="text" id="wa" placeholder="Nomor WhatsApp aktif" />
+
+<button class="btn" onclick="showCheckout()">Konfirmasi Pesanan</button>
+
+<div id="preview"></div>
+<div id="checkoutBox" style="display:none;" class="summary-box"></div>
+
+</div>
+
+<script>
+const phoneData={
+xr:{name:"iPhone XR",img:"IPHONE_XR.jpg",price:350000},
+"11":{name:"iPhone 11",img:"IPHONE_11.jpg",price:400000},
+"11pro":{name:"iPhone 11 Pro",img:"IPHONE_11PRO.jpg",price:450000},
+"11promax":{name:"iPhone 11 Pro Max",img:"IPHONE_11PM.jpg",price:500000},
+"12":{name:"iPhone 12",img:"Iphone_12.jpg",price:450000},
+"12pro":{name:"iPhone 12 Pro",img:"IPHONE_12PRO.jpg",price:500000},
+"12promax":{name:"iPhone 12 Pro Max",img:"IPHONE_12PM.jpg",price:550000},
+"13":{name:"iPhone 13",img:"IPHONE_13.jpg",price:500000},
+"13pro":{name:"iPhone 13 Pro",img:"IPHONE_13PRO.jpg",price:550000},
+"13promax":{name:"iPhone 13 Pro Max",img:"IPHONE_13PM.jpg",price:600000},
+"14":{name:"iPhone 14",img:"IPHONE_14.jpg",price:600000},
+"14plus":{name:"iPhone 14 Plus",img:"IPHONE_14PLUS.jpg",price:635000},
+"14pro":{name:"iPhone 14 Pro",img:"IPHONE_14PRO.jpg",price:650000},
+"14promax":{name:"iPhone 14 Pro Max",img:"IPHONE_14PM.jpg",price:700000},
+"15":{name:"iPhone 15",img:"IPHONE_15.jpg",price:650000},
+"15plus":{name:"iPhone 15 Plus",img:"IPHONE_15PLUS.jpg",price:685000},
+"15pro":{name:"iPhone 15 Pro",img:"IPHONE_15PRO.jpg",price:700000},
+"15promax":{name:"iPhone 15 Pro Max",img:"IPHONE_15PM.jpg",price:750000}
+};
+
+const storageOptions={
+xr:["64GB","128GB"],
+"11":["64GB","128GB","256GB"],
+"11pro":["64GB","256GB","512GB"],
+"11promax":["64GB","256GB","512GB"],
+"12":["64GB","128GB","256GB"],
+"12pro":["128GB","256GB","512GB"],
+"12promax":["128GB","256GB","512GB"],
+"13":["128GB","256GB","512GB"],
+"13pro":["128GB","256GB","512GB","1TB"],
+"13promax":["128GB","256GB","512GB","1TB"],
+"14":["128GB","256GB","512GB"],
+"14plus":["128GB","256GB","512GB"],
+"14pro":["128GB","256GB","512GB","1TB"],
+"14promax":["128GB","256GB","512GB","1TB"],
+"15":["128GB","256GB","512GB"],
+"15plus":["128GB","256GB","512GB"],
+"15pro":["128GB","256GB","512GB","1TB"],
+"15promax":["256GB","512GB","1TB"]
+};
+
+// HITUNG HARGA +7% PER LEVEL STORAGE
+function calculatePrice(basePrice, model, storage) {
+    let list = storageOptions[model];
+    let index = list.indexOf(storage);
+    let extraLevel = index; 
+    let finalPrice = basePrice * Math.pow(1.07, extraLevel);
+    return Math.round(finalPrice);
+}
+
+function updateStorage(){
+  let m=document.getElementById("model").value,
+      s=document.getElementById("storage");
+  s.innerHTML="<option>-- Pilih Storage --</option>";
+  if(storageOptions[m]){
+    storageOptions[m].forEach(x=>{
+      let o=document.createElement("option");
+      o.textContent=x;
+      s.appendChild(o);
+    });
+  }
+}
+
+function updatePhoneCard(){
+  let m=document.getElementById("model").value;
+  if(phoneData[m]){
+    document.getElementById("phoneCard").style.display="block";
+    document.getElementById("phoneImg").src=phoneData[m].img;
+    document.getElementById("phoneName").textContent=phoneData[m].name;
+    document.getElementById("phonePrice").textContent="Harga dasar: Rp " + phoneData[m].price.toLocaleString();
+  }
+}
+
+function showCheckout(){
+  let m=document.getElementById("model").value;
+  let s=document.getElementById("storage").value;
+  let n=document.getElementById("nama").value;
+  let a=document.getElementById("alamat").value;
+  let t=document.getElementById("telepon").value;
+  let w=document.getElementById("wa").value;
+
+  if(!m||!s||!n||!a||!t||!w){
+    alert("Lengkapi semua data terlebih dahulu!");
+    return;
+  }
+
+  let base = phoneData[m].price;
+  let finalPrice = calculatePrice(base, m, s);
+
+  let box=document.getElementById("checkoutBox");
+  box.style.display="block";
+  box.innerHTML=`
+    <h3>Ringkasan Pesanan</h3>
+    <p><b>Model:</b> ${phoneData[m].name}</p>
+    <p><b>Storage:</b> ${s}</p>
+    <p><b>Harga Akhir:</b> Rp ${finalPrice.toLocaleString()}</p>
+    <p><b>Nama:</b> ${n}</p>
+    <p><b>Alamat:</b> ${a}</p>
+    <p><b>No. Telepon:</b> ${t}</p>
+    <p><b>WhatsApp:</b> ${w}</p>
+    <br>
+    <a href="GANTI_LINK_CHECKOUT" style="text-decoration:none;">
+      <button class='btn'>Lanjutkan Checkout</button>
+    </a>`;
+}
+</script>
