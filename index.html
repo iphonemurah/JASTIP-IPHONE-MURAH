@@ -17,7 +17,6 @@
     background:linear-gradient(90deg,#07120a,#071219); border-bottom:1px solid rgba(255,255,255,0.03);
   }
   .wrap{max-width:1150px;margin:22px auto;padding:18px;}
-  /* grid */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:22px;}
   .card{
     background:var(--card); border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.03);
@@ -30,7 +29,6 @@
   .btn-select{width:100%;padding:10px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--accent),#00ff99);color:#000;font-weight:700;cursor:pointer}
   .btn-select:hover{opacity:.95}
   .selected-card{outline:3px solid rgba(0,204,102,0.14); box-shadow:0 12px 30px rgba(0,204,102,0.06)}
-  /* form area */
   .panel{margin-top:18px;background:linear-gradient(180deg,rgba(255,255,255,0.02),var(--glass));padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
   .row{display:flex;gap:12px}
   .col{flex:1}
@@ -42,7 +40,6 @@
   .small{font-size:13px}
   .flex{display:flex;gap:8px;align-items:center}
   .badge{background:#ffdd57;color:#000;padding:4px 8px;border-radius:8px;font-weight:700;font-size:12px}
-  /* responsive tweaks */
   @media (max-width:600px){ .row{flex-direction:column} .card img{height:140px} }
 </style>
 </head>
@@ -59,23 +56,17 @@
       <div class="muted small">100% Original • Garansi IMEI • Packing Video</div>
     </div>
 
-    <!-- GRID OF CARDS (18) -->
     <div id="cardsGrid" class="grid"></div>
 
-    <!-- SELECTION / FORM PANEL -->
     <div class="panel" id="selectionPanel" style="display:none;">
       <div class="row" style="align-items:center;">
         <div style="width:120px;">
-          <img id="selImg" src="GANTI_FOTO_DEFAULT.jpg" alt="selected" style="width:120px;height:120px;object-fit:cover;border-radius:10px" />
+          <img id="selImg" src="GANTI_FOTO_DEFAULT.jpg" style="width:120px;height:120px;object-fit:cover;border-radius:10px" />
         </div>
         <div class="col">
           <h3 id="selName">Nama iPhone</h3>
           <div class="price" id="selBasePrice">Rp 0</div>
           <div class="muted small" id="selHint">Pilih storage dan warna untuk melihat harga akhir</div>
-        </div>
-        <div style="width:160px">
-          <div class="muted small">Status</div>
-          <div style="margin-top:8px"><span id="selStatus" class="badge">Tersedia</span></div>
         </div>
       </div>
 
@@ -120,13 +111,21 @@
       </div>
 
       <div id="orderSummary" class="summary" style="display:none"></div>
-    </div>
 
+      <!-- TOMBOL WA DI LUAR RINGKASAN -->
+      <div id="waOuterBox" style="margin-top:18px; display:none;">
+        <a id="waOuterButton" href="#" target="_blank" style="text-decoration:none;">
+          <button class="btn-select" style="background:#25D366;color:#fff;font-weight:700;">
+            Chat via WhatsApp
+          </button>
+        </a>
+      </div>
+
+    </div>
   </section>
 </main>
 
 <script>
-/* ===== DATA (sama seperti sebelumnya, ditampilkan untuk 18 seri) ===== */
 const phoneData = {
   xr:{name:"iPhone XR", img:"IPHONE_XR.jpg", price:350000},
   "11":{name:"iPhone 11", img:"IPHONE_11.jpg", price:400000},
@@ -190,11 +189,10 @@ const colorOptions = {
   "15promax":["Black Titanium","White Titanium","Blue Titanium","Natural Titanium"]
 };
 
-/* ===== render cards grid ===== */
 const cardsGrid = document.getElementById('cardsGrid');
-const keysOrder = ["xr","11","11pro","11promax","12","12pro","12promax","13","13pro","13promax","14","14plus","14pro","14promax","15","15plus","15pro","15promax"];
+const order = ["xr","11","11pro","11promax","12","12pro","12promax","13","13pro","13promax","14","14plus","14pro","14promax","15","15plus","15pro","15promax"];
 
-keysOrder.forEach(key=>{
+order.forEach(key=>{
   const d = phoneData[key];
   const card = document.createElement('div');
   card.className='card';
@@ -207,128 +205,127 @@ keysOrder.forEach(key=>{
   cardsGrid.appendChild(card);
 });
 
-/* ===== selection logic ===== */
-let selectedModel = null;
+let selectedModel=null;
 
-cardsGrid.addEventListener('click', (e)=>{
-  const btn = e.target.closest('.btn-select');
-  if(!btn) return;
-  const key = btn.dataset.key;
-  selectModel(key, btn.closest('.card'));
+cardsGrid.addEventListener('click',(e)=>{
+  const btn=e.target.closest('.btn-select');
+  if(!btn)return;
+  const key=btn.dataset.key;
+  selectModel(key,btn.closest('.card'));
 });
 
-function selectModel(key, cardElement){
-  // highlight selected
+function selectModel(key,cardEl){
   document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected-card'));
-  cardElement.classList.add('selected-card');
+  cardEl.classList.add('selected-card');
 
-  selectedModel = key;
-  const d = phoneData[key];
+  selectedModel=key;
+  const d=phoneData[key];
 
-  // show panel
   document.getElementById('selectionPanel').style.display='block';
-  document.getElementById('selImg').src = d.img;
-  document.getElementById('selName').textContent = d.name;
-  document.getElementById('selBasePrice').textContent = formatRupiah(d.price);
-  document.getElementById('selHint').textContent = "Pilih storage & warna untuk melihat harga akhir";
+  document.getElementById('selImg').src=d.img;
+  document.getElementById('selName').textContent=d.name;
+  document.getElementById('selBasePrice').textContent=formatRupiah(d.price);
 
-  // populate storage & color selects
-  const sSel = document.getElementById('storageSelect');
-  const cSel = document.getElementById('colorSelect');
-  sSel.innerHTML = '<option value="">-- Pilih Storage --</option>';
-  cSel.innerHTML = '<option value="">-- Pilih Warna --</option>';
-  if(storageOptions[key]) storageOptions[key].forEach(opt=>{
-    const o = document.createElement('option'); o.value=opt; o.textContent=opt; sSel.appendChild(o);
+  const sSel=document.getElementById('storageSelect');
+  const cSel=document.getElementById('colorSelect');
+
+  sSel.innerHTML='<option value="">-- Pilih Storage --</option>';
+  cSel.innerHTML='<option value="">-- Pilih Warna --</option>';
+
+  storageOptions[key].forEach(x=>{
+    const o=document.createElement('option');o.value=o.textContent=x;sSel.appendChild(o);
   });
-  if(colorOptions[key]) colorOptions[key].forEach(opt=>{
-    const o = document.createElement('option'); o.value=opt; o.textContent=opt; cSel.appendChild(o);
+
+  colorOptions[key].forEach(x=>{
+    const o=document.createElement('option');o.value=o.textContent=x;cSel.appendChild(o);
   });
-  // scroll to panel
-  setTimeout(()=>document.getElementById('selectionPanel').scrollIntoView({behavior:'smooth', block:'center'}),120);
+
+  setTimeout(()=>document.getElementById('selectionPanel').scrollIntoView({behavior:'smooth'}),80);
 }
 
-/* ===== price calc: +7% per storage level ===== */
-function calcPrice(modelKey, storageValue){
-  const base = phoneData[modelKey].price;
-  const list = storageOptions[modelKey] || [];
-  const idx = list.indexOf(storageValue);
-  if(idx <= 0) return base;
-  const final = Math.round(base * Math.pow(1.07, idx));
-  return final;
+function calcPrice(model,storage){
+  const base=phoneData[model].price;
+  const list=storageOptions[model];
+  const idx=list.indexOf(storage);
+  if(idx<=0)return base;
+  return Math.round(base*Math.pow(1.07,idx));
 }
 
-/* ===== helpers ===== */
-function formatRupiah(num){ return 'Rp '+Number(num).toLocaleString('id-ID'); }
+function formatRupiah(num){return 'Rp '+Number(num).toLocaleString('id-ID');}
 
-/* ===== calc & preview ===== */
 function calcAndPreview(){
-  if(!selectedModel){ alert('Pilih salah satu card iPhone terlebih dahulu.'); return; }
-  const storage = document.getElementById('storageSelect').value;
-  const color = document.getElementById('colorSelect').value;
-  const nama = document.getElementById('nama').value.trim();
-  const alamat = document.getElementById('alamat').value.trim();
-  const tel = document.getElementById('telepon').value.trim();
-  const wa = document.getElementById('wa').value.trim();
+  if(!selectedModel){alert("Pilih salah satu model terlebih dahulu.");return;}
 
-  if(!storage || !color || !nama || !alamat || !tel || !wa){
-    alert('Lengkapi semua pilihan: storage, warna, dan data diri.');
+  const s=document.getElementById("storageSelect").value;
+  const w=document.getElementById("colorSelect").value;
+  const n=document.getElementById("nama").value.trim();
+  const a=document.getElementById("alamat").value.trim();
+  const t=document.getElementById("telepon").value.trim();
+  const wa=document.getElementById("wa").value.trim();
+
+  if(!s||!w||!n||!a||!t||!wa){
+    alert("Lengkapi semua data terlebih dahulu.");
     return;
   }
 
-  const finalPrice = calcPrice(selectedModel, storage);
+  const final=calcPrice(selectedModel,s);
 
-  const summary = document.getElementById('orderSummary');
+  // === RINGKASAN DALAM BOX ===
+  const summary=document.getElementById("orderSummary");
   summary.style.display='block';
-  summary.innerHTML = `
-<h3>Ringkasan Pesanan</h3>
-<p><b>Model:</b> ${phoneData[m].name}</p>
-<p><b>Storage:</b> ${s}</p>
-<p><b>Warna:</b> ${warna}</p>
-<p><b>Harga:</b> ${formatRupiah(finalPrice)}</p>
-<p><b>Nama:</b> ${n}</p>
-<p><b>Alamat:</b> ${a}</p>
-<p><b>Telepon:</b> ${t}</p>
-<p><b>WhatsApp:</b> ${w}</p>
-<br>
+  summary.innerHTML=`
+    <h3>Ringkasan Pesanan</h3>
+    <p><b>Model:</b> ${phoneData[selectedModel].name}</p>
+    <p><b>Storage:</b> ${s}</p>
+    <p><b>Warna:</b> ${w}</p>
+    <p><b>Harga:</b> ${formatRupiah(final)}</p>
+    <p><b>Nama:</b> ${n}</p>
+    <p><b>Alamat:</b> ${a}</p>
+    <p><b>Telepon:</b> ${t}</p>
+    <p><b>WhatsApp:</b> ${wa}</p>
+    <br>
 
-<!-- Tombol Checkout -->
-<a href="GANTI_LINK_CHECKOUT" style="text-decoration:none;">
-  <button class='btn'>Lanjutkan Checkout</button>
-</a>
+    <a href="GANTI_LINK_CHECKOUT">
+      <button class="btn-select">Konfirmasi Pesanan</button>
+    </a>
+    <br><br>
 
-<br><br>
+    <a id="waButton" href="#" target="_blank">
+      <button class="btn-select" style="background:#25D366;color:#fff;">Chat via WhatsApp</button>
+    </a>
+  `;
 
-<!-- Tombol WhatsApp -->
-<a id="waButton" href="#" target="_blank" style="text-decoration:none;">
-  <button class='btn' style="background:#25D366;">Chat via WhatsApp</button>
-</a>
-`;
-  // --- Auto WhatsApp ---
-let pesanWA = 
+  // === AUTO PESAN WA ===
+  let pesan =
 `Halo kak, saya ingin memesan iPhone.
 
-Model: ${phoneData[m].name}
+Model: ${phoneData[selectedModel].name}
 Storage: ${s}
-Warna: ${warna}
-Harga: ${formatRupiah(finalPrice)}
+Warna: ${w}
+Harga: ${formatRupiah(final)}
 
 Nama: ${n}
 Alamat: ${a}
 Telepon: ${t}
-WhatsApp: ${w}
+WhatsApp: ${wa}
 
 Apakah ready kak?`;
 
-let nomorWA = "6281385371544"; // ganti dengan nomor kamu
+  let nomorWA = "6281385371544"; // ← ganti nomor kamu sendiri
 
-document.getElementById("waButton").href =
-  "https://wa.me/" + nomorWA + "?text=" + encodeURIComponent(pesanWA);
-  // scroll to summary
-  setTimeout(()=>summary.scrollIntoView({behavior:'smooth', block:'center'}),80);
+  // WA di dalam ringkasan
+  document.getElementById("waButton").href =
+    "https://wa.me/" + nomorWA + "?text=" + encodeURIComponent(pesan);
+
+  // WA di luar ringkasan
+  document.getElementById("waOuterButton").href =
+    "https://wa.me/" + nomorWA + "?text=" + encodeURIComponent(pesan);
+
+  document.getElementById("waOuterBox").style.display = "block";
+
+  setTimeout(()=>summary.scrollIntoView({behavior:'smooth'}),80);
 }
-
-/* simple escape to avoid injection if paste untrusted */
-function escapeHtml(str){ return str.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 </script>
+
 </body>
 </html>
