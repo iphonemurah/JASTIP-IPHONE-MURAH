@@ -94,7 +94,7 @@ p{margin:6px 0; font-size:15px;}
   margin-left:8px;
 }
 
-/* Modal popup */
+/* Modal popup QRIS */
 #paymentModal{
   display:none;
   position:fixed;
@@ -133,6 +133,7 @@ p{margin:6px 0; font-size:15px;}
 .payment-methods{margin-top:16px;}
 .payment-methods p{margin-bottom:6px;}
 .payment-methods button{margin-bottom:6px;}
+#rekDisplay{margin-top:12px; font-size:15px; color:#00cc66;}
 </style>
 </head>
 <body>
@@ -153,13 +154,14 @@ p{margin:6px 0; font-size:15px;}
   <!-- Metode Pembayaran -->
   <div class="payment-methods" id="paymentMethods">
     <p><b>Pilih Metode Pembayaran:</b></p>
-    <button class="glass-btn primary" onclick="selectPayment('QRIS')">QRIS</button>
-    <button class="glass-btn primary" onclick="selectPayment('BRI')">BRI</button>
-    <button class="glass-btn primary" onclick="selectPayment('SEABANK')">SEABANK</button>
-    <button class="glass-btn primary" onclick="selectPayment('MANDIRI')">MANDIRI</button>
-    <button class="glass-btn primary" onclick="selectPayment('DANA')">DANA</button>
-    <button class="glass-btn primary" onclick="selectPayment('OVO')">OVO</button>
-    <button class="glass-btn primary" onclick="selectPayment('GOPAY')">GOPAY</button>
+    <button class="glass-btn primary" onclick="showQRIS()">QRIS</button>
+    <button class="glass-btn primary" onclick="showRek('BRI','1234567890 a.n. Nama Anda')">BRI</button>
+    <button class="glass-btn primary" onclick="showRek('MANDIRI','0987654321 a.n. Nama Anda')">MANDIRI</button>
+    <button class="glass-btn primary" onclick="showRek('SEABANK','1122334455 a.n. Nama Anda')">SEABANK</button>
+    <button class="glass-btn primary" onclick="showRek('DANA','081234567890')">DANA</button>
+    <button class="glass-btn primary" onclick="showRek('OVO','081234567890')">OVO</button>
+    <button class="glass-btn primary" onclick="showRek('GOPAY','081234567890')">GOPAY</button>
+    <div id="rekDisplay"></div>
   </div>
 
   <!-- Tombol WA -->
@@ -169,12 +171,12 @@ p{margin:6px 0; font-size:15px;}
   <button id="paidButton" class="glass-btn primary">Sudah Dibayar</button>
 </div>
 
-<!-- Modal -->
+<!-- Modal QRIS -->
 <div id="paymentModal">
   <div class="modalContent">
     <span id="closeModal">&times;</span>
-    <img id="modalImg" src="" alt="QRIS / Rek">
-    <p id="modalText"></p>
+    <img src="qris.png" alt="QRIS">
+    <p>Scan QRIS untuk pembayaran</p>
   </div>
 </div>
 
@@ -201,52 +203,29 @@ if(data){
 
   updateWA();
 
-  function selectPayment(method){
+  // QRIS modal
+  const modal = document.getElementById('paymentModal');
+  const rekDisplay = document.getElementById('rekDisplay');
+
+  function showQRIS(){
+    rekDisplay.textContent = '';
+    data.payment = 'QRIS';
+    localStorage.setItem('orderData', JSON.stringify(data));
+    updateWA();
+    modal.style.display = 'flex';
+  }
+  function showRek(method, number){
+    modal.style.display = 'none';
+    rekDisplay.textContent = `${method}: ${number}`;
     data.payment = method;
     localStorage.setItem('orderData', JSON.stringify(data));
     updateWA();
-
-    const modal = document.getElementById('paymentModal');
-    const modalImg = document.getElementById('modalImg');
-    const modalText = document.getElementById('modalText');
-
-    switch(method){
-      case 'QRIS':
-        modalImg.src = 'qris.png';
-        modalText.textContent = 'Scan QRIS untuk pembayaran';
-        break;
-      case 'BRI':
-        modalImg.src = '';
-        modalText.textContent = 'No. Rekening BRI: 1234567890 a.n. Nama Anda';
-        break;
-      case 'MANDIRI':
-        modalImg.src = '';
-        modalText.textContent = 'No. Rekening Mandiri: 0987654321 a.n. Nama Anda';
-        break;
-      case 'SEABANK':
-        modalImg.src = '';
-        modalText.textContent = 'No. Rekening SEABANK: 1122334455 a.n. Nama Anda';
-        break;
-      case 'DANA':
-        modalImg.src = '';
-        modalText.textContent = 'Nomor DANA: 081234567890';
-        break;
-      case 'OVO':
-        modalImg.src = '';
-        modalText.textContent = 'Nomor OVO: 081234567890';
-        break;
-      case 'GOPAY':
-        modalImg.src = '';
-        modalText.textContent = 'Nomor GOPAY: 081234567890';
-        break;
-    }
-
-    modal.style.display = 'flex';
   }
-  window.selectPayment = selectPayment;
+  window.showQRIS = showQRIS;
+  window.showRek = showRek;
 
   document.getElementById('closeModal').onclick = function(){
-    document.getElementById('paymentModal').style.display = 'none';
+    modal.style.display = 'none';
   }
 
   const paidBtn = document.getElementById('paidButton');
