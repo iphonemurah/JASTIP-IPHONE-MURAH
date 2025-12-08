@@ -171,12 +171,13 @@ p{margin:6px 0; font-size:15px;}
   <div class="payment-methods" id="paymentMethods">
     <p><b>Pilih Metode Pembayaran:</b></p>
     <button class="glass-btn primary" onclick="showQRIS()">QRIS</button>
-    <button class="glass-btn primary" onclick="showRek('BRI','1234567890 a.n. Nama Anda')">BRI</button>
-    <button class="glass-btn primary" onclick="showRek('MANDIRI','0987654321 a.n. Nama Anda')">MANDIRI</button>
-    <button class="glass-btn primary" onclick="showRek('SEABANK','1122334455 a.n. Nama Anda')">SEABANK</button>
-    <button class="glass-btn primary" onclick="showRek('DANA','081234567890')">DANA</button>
-    <button class="glass-btn primary" onclick="showRek('OVO','081234567890')">OVO</button>
-    <button class="glass-btn primary" onclick="showRek('GOPAY','081234567890')">GOPAY</button>
+    <button class="glass-btn primary" onclick="showRek('BRI','5740 0100 6358 507 a.n. JUANDI')">BRI</button>
+    <button class="glass-btn primary" onclick="showRek('MANDIRI','XXXXXXXX a.n. XXXXXX (OFFLINE) ')">MANDIRI</button>
+    <button class="glass-btn primary" onclick="showRek('SEABANK','901535345930 a.n. JUANDI')">SEABANK</button>
+    <button class="glass-btn primary" onclick="showRek('DANA','082110764002')">DANA</button>
+    <button class="glass-btn primary" onclick="showRek('OVO','08979694169')">OVO</button>
+    <button class="glass-btn primary" onclick="showRek('GOPAY','08979694169')">GOPAY</button>
+    <button class="glass-btn primary" onclick="()">COD BAYAR DI TEMPAT</button>
     <div id="rekDisplay"></div>
   </div>
 
@@ -191,7 +192,7 @@ p{margin:6px 0; font-size:15px;}
 <div id="paymentModal">
   <div class="modalContent">
     <span id="closeModal">&times;</span>
-    <img src="qris.png" alt="QRIS">
+    <img src="images/qris.png" alt="QRIS">
     <p>Scan QRIS untuk pembayaran</p>
   </div>
 </div>
